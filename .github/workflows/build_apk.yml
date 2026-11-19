@@ -23,24 +23,26 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # 3. Set up Android SDK
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
-      # 4. Write android/local.properties with correct SDK path
-      - name: Create android/local.properties
-        run: |
-          echo "sdk.dir=$ANDROID_SDK_ROOT" > android/local.properties
-          echo "flutter.sdk=$(which flutter | sed 's|/bin/flutter||')" >> android/local.properties
-          cat android/local.properties
-
-      # 5. Install Flutter stable
+      # 3. Set up Flutter stable
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.24.5'
           channel: 'stable'
           cache: true
+
+      # 4. Set up Android SDK
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools platforms;android-34 build-tools;34.0.0'
+
+      # 5. Write android/local.properties with correct SDK path
+      - name: Create android/local.properties
+        run: |
+          echo "sdk.dir=$ANDROID_SDK_ROOT" > android/local.properties
+          echo "flutter.sdk=$(which flutter | sed 's|/bin/flutter||')" >> android/local.properties
+          cat android/local.properties
 
       # 6. Confirm Flutter version
       - name: Flutter Version Info
