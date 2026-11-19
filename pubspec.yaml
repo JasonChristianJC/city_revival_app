@@ -45,6 +45,12 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^3.0.0
 
+# Pin app_links to last version before the flutter.* Gradle property regression.
+# app_links >=6.4.0 uses flutter.compileSdkVersion in its Android build.gradle,
+# which is only available in the app module and crashes as a library sub-project.
+dependency_overrides:
+  app_links: 6.3.4
+
 flutter:
   uses-material-design: true
 

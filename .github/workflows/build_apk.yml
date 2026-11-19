@@ -27,7 +27,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.5'
+          flutter-version: '3.27.1'
           channel: 'stable'
           cache: true
 
@@ -48,9 +48,29 @@ jobs:
       - name: Flutter Version Info
         run: flutter --version
 
-      # 7. Install pub dependencies (generates pubspec.lock fresh)
+      # 7. Install pub dependencies
       - name: flutter pub get
         run: flutter pub get
+
+      # 8. Patch app_links Gradle build script (belt-and-suspenders)
+      # app_links >=6.4.0 references flutter.compileSdkVersion which is only
+      # available in the app module. Replace with hardcoded values if present.
+      - name: Patch app_links Gradle if needed
+        run: |
+          find $HOME/.pub-cache -name "build.gradle" -path "*/app_links-*/android/build.gradle" | while read f; do
+            if grep -q 'flutter\.compileSdkVersion\|flutter\.targetSdkVersion\|flutter\.minSdkVersion' "$f"; then
+              echo "Patching $f ..."
+              sed -i \
+                -e 's/flutter\.compileSdkVersion/34/g' \
+                -e 's/flutter\.targetSdkVersion/34/g' \
+                -e 's/flutter\.minSdkVersion/21/g' \
+                "$f"
+              echo "Patched content:"
+              cat "$f"
+            else
+              echo "$f — no flutter.* references, no patch needed."
+            fi
+          done
 
       # 8. Accept Android SDK licenses
       - name: Accept Android Licenses
