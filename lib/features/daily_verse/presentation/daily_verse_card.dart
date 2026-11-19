@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
@@ -215,7 +214,7 @@ class DailyVerseCard extends ConsumerWidget {
                             message: msg,
                           );
                         },
-                        icon: const FaIcon(FontAwesomeIcons.whatsapp, size: 16),
+                        icon: const Icon(Icons.chat_bubble_rounded, size: 16),
                         label: const Text('Status Share'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF25D366),

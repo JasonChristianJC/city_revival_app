@@ -32,7 +32,7 @@ class AppTheme {
         ),
         iconTheme: const IconThemeData(color: AppColors.divineGold),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: AppColors.parchmentCard,
         elevation: 2,
         shadowColor: AppColors.primaryBurgundyDark.withOpacity(0.08),
@@ -166,7 +166,7 @@ class AppTheme {
         ),
         iconTheme: const IconThemeData(color: AppColors.divineGold),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: AppColors.darkCard,
         elevation: 4,
         shadowColor: Colors.black.withOpacity(0.4),
