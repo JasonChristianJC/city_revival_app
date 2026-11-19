@@ -44,5 +44,6 @@ app.*.map.json
 # Zip file
 app.zip
 
-# Local properties (keep android/local.properties only for CI)
-# android/local.properties
+# Local properties
+android/local.properties
+**/android/local.properties

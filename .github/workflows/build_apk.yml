@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:   # Also allows manual trigger from GitHub website
+  workflow_dispatch:
 
 jobs:
   build-apk:
@@ -12,18 +12,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Check out the code
+      # 1. Check out repository code
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # 2. Set up Java 17 (required by Android Gradle)
+      # 2. Set up Java 17 (required by Android Gradle plugin)
       - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      # 3. Install Flutter (latest stable)
+      # 3. Set up Android SDK
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      # 4. Write android/local.properties with correct SDK path
+      - name: Create android/local.properties
+        run: |
+          echo "sdk.dir=$ANDROID_SDK_ROOT" > android/local.properties
+          echo "flutter.sdk=$(which flutter | sed 's|/bin/flutter||')" >> android/local.properties
+          cat android/local.properties
+
+      # 5. Install Flutter stable
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -31,28 +42,28 @@ jobs:
           channel: 'stable'
           cache: true
 
-      # 4. Show Flutter & Dart version for logs
+      # 6. Confirm Flutter version
       - name: Flutter Version Info
         run: flutter --version
 
-      # 5. Install all pub packages from pubspec.yaml
-      - name: Install Dependencies (flutter pub get)
+      # 7. Install pub dependencies (generates pubspec.lock fresh)
+      - name: flutter pub get
         run: flutter pub get
 
-      # 6. Run Dart analyzer to catch code errors
+      # 8. Accept Android SDK licenses
+      - name: Accept Android Licenses
+        run: yes | flutter doctor --android-licenses || true
+
+      # 9. Run analyzer (non-blocking)
       - name: Analyze Code
         run: flutter analyze --no-fatal-infos
         continue-on-error: true
 
-      # 7. Build the release APK (unsigned — installable directly on Android phones)
+      # 10. Build release APK
       - name: Build Release APK
-        run: |
-          flutter build apk \
-            --release \
-            --no-shrink \
-            --dart-define=FLUTTER_SUPPRESS_ANALYTICS=true
+        run: flutter build apk --release
 
-      # 8. Upload APK as a downloadable artifact (available for 90 days)
+      # 11. Upload APK as downloadable artifact (kept 90 days)
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -60,16 +71,14 @@ jobs:
           path: build/app/outputs/flutter-apk/app-release.apk
           retention-days: 90
 
-      # 9. Also rename and show the file size in build logs
+      # 12. Print APK size
       - name: Show APK Info
         run: |
-          APK_PATH="build/app/outputs/flutter-apk/app-release.apk"
-          if [ -f "$APK_PATH" ]; then
-            SIZE=$(du -sh "$APK_PATH" | cut -f1)
-            echo "✅ APK built successfully!"
-            echo "📦 File: app-release.apk"
-            echo "📏 Size: $SIZE"
+          APK="build/app/outputs/flutter-apk/app-release.apk"
+          if [ -f "$APK" ]; then
+            SIZE=$(du -sh "$APK" | cut -f1)
+            echo "APK built successfully — Size: $SIZE"
           else
-            echo "❌ APK not found — build may have failed."
+            echo "APK file not found"
             exit 1
           fi
