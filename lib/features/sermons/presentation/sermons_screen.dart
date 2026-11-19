@@ -8,7 +8,9 @@ import 'sermon_card.dart';
 import '../../announcements/presentation/sunday_live_alert_banner.dart';
 
 class SermonsScreen extends ConsumerStatefulWidget {
-  const SermonsScreen({super.key});
+  final Widget? drawer;
+
+  const SermonsScreen({super.key, this.drawer});
 
   @override
   ConsumerState<SermonsScreen> createState() => _SermonsScreenState();
@@ -37,6 +39,7 @@ class _SermonsScreenState extends ConsumerState<SermonsScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
+      drawer: widget.drawer,
       appBar: AppBar(
         title: Text(
           'SERMON VIDEO HUB',

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../core/constants/app_colors.dart';
+import '../../../core/widgets/app_drawer.dart';
+import '../../announcements/presentation/announcements_screen.dart';
 import '../../giving/presentation/prayer_and_give_screen.dart';
 import '../../magazine/presentation/magazines_screen.dart';
 import '../../sermons/presentation/sermons_screen.dart';
@@ -23,61 +24,34 @@ class _MainScaffoldState extends State<MainScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final drawer = AppDrawer(
+      currentIndex: _currentIndex,
+      onSelectTab: _onTabSelected,
+    );
 
     final pages = [
-      HomeScreen(onNavigateTab: _onTabSelected),
-      const SermonsScreen(),
-      const MagazinesScreen(),
-      const PrayerAndGiveScreen(),
+      HomeScreen(
+        onNavigateTab: _onTabSelected,
+        drawer: drawer,
+      ),
+      AnnouncementsScreen(
+        drawer: drawer,
+      ),
+      SermonsScreen(
+        drawer: drawer,
+      ),
+      MagazinesScreen(
+        drawer: drawer,
+      ),
+      PrayerAndGiveScreen(
+        drawer: drawer,
+      ),
     ];
 
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,
         children: pages,
-      ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.08),
-              blurRadius: 10,
-              offset: const Offset(0, -2),
-            ),
-          ],
-        ),
-        child: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: _onTabSelected,
-          type: BottomNavigationBarType.fixed,
-          selectedItemColor: isDark ? AppColors.divineGold : AppColors.primaryWine,
-          unselectedItemColor: isDark ? Colors.white54 : Colors.grey.shade600,
-          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11.5),
-          unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
-              activeIcon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.video_library_outlined),
-              activeIcon: Icon(Icons.video_library),
-              label: 'Sermons',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.auto_stories_outlined),
-              activeIcon: Icon(Icons.auto_stories),
-              label: 'Magazines',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.volunteer_activism_outlined),
-              activeIcon: Icon(Icons.volunteer_activism),
-              label: 'Prayer & Give',
-            ),
-          ],
-        ),
       ),
     );
   }

@@ -10,6 +10,8 @@ jobs:
   build-apk:
     name: Build Release APK
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       # 1. Check out repository code
@@ -103,3 +105,22 @@ jobs:
             echo "APK file not found"
             exit 1
           fi
+
+      # 13. Create GitHub Release for 1-Tap direct APK download on Android (No ZIP!)
+      - name: Prepare APK for Direct Download
+        run: cp build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/CityRevivalAG-Church.apk
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/heads/main'
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: City Revival AG App v1.0.${{ github.run_number }}
+          body: |
+            ### 📱 City Revival AG Church Official App
+            **Release Build:** v1.0.${{ github.run_number }}
+
+            #### 📥 1-Tap Direct Android Installation:
+            Download **`CityRevivalAG-Church.apk`** below directly on your mobile browser (no ZIP, no Google Drive extraction required)!
+          files: |
+            build/app/outputs/flutter-apk/CityRevivalAG-Church.apk

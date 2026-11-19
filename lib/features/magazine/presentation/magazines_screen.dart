@@ -7,7 +7,9 @@ import '../data/magazine_repository.dart';
 import 'magazine_card.dart';
 
 class MagazinesScreen extends ConsumerWidget {
-  const MagazinesScreen({super.key});
+  final Widget? drawer;
+
+  const MagazinesScreen({super.key, this.drawer});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -18,6 +20,7 @@ class MagazinesScreen extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
+      drawer: drawer,
       appBar: AppBar(
         title: Text(
           'PARIPOORANA JEEVAN',

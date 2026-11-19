@@ -8,8 +8,13 @@ import 'upi_giving_card.dart';
 
 class PrayerAndGiveScreen extends StatefulWidget {
   final int initialTabIndex;
+  final Widget? drawer;
 
-  const PrayerAndGiveScreen({super.key, this.initialTabIndex = 0});
+  const PrayerAndGiveScreen({
+    super.key,
+    this.initialTabIndex = 0,
+    this.drawer,
+  });
 
   @override
   State<PrayerAndGiveScreen> createState() => _PrayerAndGiveScreenState();
@@ -40,6 +45,7 @@ class _PrayerAndGiveScreenState extends State<PrayerAndGiveScreen>
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
+      drawer: widget.drawer,
       appBar: AppBar(
         title: Text(
           'PRAYER & GIVING',

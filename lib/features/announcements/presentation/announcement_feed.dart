@@ -8,7 +8,9 @@ import '../data/announcement_repository.dart';
 import 'announcement_detail_screen.dart';
 
 class AnnouncementFeed extends ConsumerWidget {
-  const AnnouncementFeed({super.key});
+  final VoidCallback? onViewAll;
+
+  const AnnouncementFeed({super.key, this.onViewAll});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -32,7 +34,20 @@ class AnnouncementFeed extends ConsumerWidget {
                   color: isDark ? AppColors.divineGold : AppColors.primaryWine,
                 ),
               ),
-              const Icon(Icons.campaign, color: AppColors.divineGold, size: 20),
+              if (onViewAll != null)
+                TextButton(
+                  onPressed: onViewAll,
+                  style: TextButton.styleFrom(
+                    visualDensity: VisualDensity.compact,
+                    foregroundColor: isDark ? AppColors.divineGold : AppColors.primaryWine,
+                  ),
+                  child: const Text(
+                    'View All',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                )
+              else
+                const Icon(Icons.campaign, color: AppColors.divineGold, size: 20),
             ],
           ),
         ),

@@ -14,8 +14,13 @@ import '../../sermons/presentation/sermon_card.dart';
 
 class HomeScreen extends ConsumerWidget {
   final void Function(int tabIndex) onNavigateTab;
+  final Widget? drawer;
 
-  const HomeScreen({super.key, required this.onNavigateTab});
+  const HomeScreen({
+    super.key,
+    required this.onNavigateTab,
+    this.drawer,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -23,6 +28,7 @@ class HomeScreen extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
+      drawer: drawer,
       appBar: AppBar(
         title: Column(
           children: [
@@ -81,31 +87,38 @@ class HomeScreen extends ConsumerWidget {
                 child: Row(
                   children: [
                     _buildQuickAction(
-                      icon: Icons.video_library,
-                      label: 'Sermons',
+                      icon: Icons.campaign_rounded,
+                      label: 'Notices',
                       color: AppColors.primaryWine,
                       onTap: () => onNavigateTab(1),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 6),
                     _buildQuickAction(
-                      icon: Icons.auto_stories,
-                      label: 'Magazines',
-                      color: AppColors.divineGoldDark,
+                      icon: Icons.video_library_rounded,
+                      label: 'Sermons',
+                      color: const Color(0xFFD97706),
                       onTap: () => onNavigateTab(2),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 6),
                     _buildQuickAction(
-                      icon: Icons.volunteer_activism,
-                      label: 'Give UPI',
-                      color: const Color(0xFF16A34A),
+                      icon: Icons.auto_stories_rounded,
+                      label: 'Magazines',
+                      color: AppColors.divineGoldDark,
                       onTap: () => onNavigateTab(3),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 6),
                     _buildQuickAction(
-                      icon: Icons.lock_person,
+                      icon: Icons.volunteer_activism_rounded,
+                      label: 'Give UPI',
+                      color: const Color(0xFF16A34A),
+                      onTap: () => onNavigateTab(4),
+                    ),
+                    const SizedBox(width: 6),
+                    _buildQuickAction(
+                      icon: Icons.lock_person_rounded,
                       label: 'Prayer',
                       color: const Color(0xFF7C3AED),
-                      onTap: () => onNavigateTab(3),
+                      onTap: () => onNavigateTab(4),
                     ),
                   ],
                 ),
@@ -114,7 +127,9 @@ class HomeScreen extends ConsumerWidget {
               const SizedBox(height: 12),
 
               // Feature 2: Instant Announcements Feed
-              const AnnouncementFeed(),
+              AnnouncementFeed(
+                onViewAll: () => onNavigateTab(1),
+              ),
 
               const SizedBox(height: 16),
 
@@ -134,8 +149,15 @@ class HomeScreen extends ConsumerWidget {
                       ),
                     ),
                     TextButton(
-                      onPressed: () => onNavigateTab(1),
-                      child: const Text('View All'),
+                      onPressed: () => onNavigateTab(2),
+                      style: TextButton.styleFrom(
+                        visualDensity: VisualDensity.compact,
+                        foregroundColor: isDark ? AppColors.divineGold : AppColors.primaryWine,
+                      ),
+                      child: const Text(
+                        'View All',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ],
                 ),
