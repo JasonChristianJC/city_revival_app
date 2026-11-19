@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/widgets/sacred_card.dart';
-import '../data/magazine_download_service.dart';
 import '../data/magazine_repository.dart';
 import '../domain/magazine.dart';
 import 'pdf_reader_screen.dart';

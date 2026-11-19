@@ -42,8 +42,6 @@ class _PrayerAndGiveScreenState extends State<PrayerAndGiveScreen>
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Scaffold(
       drawer: widget.drawer,
       appBar: AppBar(

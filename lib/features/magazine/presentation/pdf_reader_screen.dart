@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/utils/share_helper.dart';
-import '../data/magazine_download_service.dart';
 import '../data/magazine_repository.dart';
 import '../domain/magazine.dart';
 
@@ -24,7 +23,6 @@ class _PdfReaderScreenState extends ConsumerState<PdfReaderScreen> {
   String? _errorMessage;
   int _totalPages = 0;
   int _currentPage = 0;
-  bool _isDownloading = false;
   double _downloadProgress = 0.0;
 
   @override
