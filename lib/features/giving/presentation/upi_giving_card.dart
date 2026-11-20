@@ -20,7 +20,6 @@ class _UpiGivingCardState extends State<UpiGivingCard> {
     'Tithe & Offering',
     'Vision 2035 Building Fund',
     'Missions Support',
-    'Fasting Prayer Thanksgiving',
   ];
 
   final List<String> _presetAmounts = ['500', '1000', '2000', '5000'];
