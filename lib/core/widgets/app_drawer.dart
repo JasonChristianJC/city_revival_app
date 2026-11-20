@@ -199,10 +199,18 @@ class AppDrawer extends StatelessWidget {
                 ),
                 _buildDrawerItem(
                   context: context,
-                  icon: Icons.favorite_rounded,
-                  title: 'Prayer & Giving',
-                  subtitle: 'ஜெப விண்ணப்பம் & காணிக்கை',
+                  icon: Icons.volunteer_activism_rounded,
+                  title: '1-Tap UPI Giving',
+                  subtitle: 'காணிக்கை • Tithes, Building & Missions',
                   index: 4,
+                  isDark: isDark,
+                ),
+                _buildDrawerItem(
+                  context: context,
+                  icon: Icons.lock_person_rounded,
+                  title: 'Confidential Prayer',
+                  subtitle: 'ஜெப விண்ணப்பம் • Direct to Senior Pastor',
+                  index: 5,
                   isDark: isDark,
                 ),
 

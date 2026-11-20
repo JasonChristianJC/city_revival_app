@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../core/widgets/app_drawer.dart';
 import '../../announcements/presentation/announcements_screen.dart';
-import '../../giving/presentation/prayer_and_give_screen.dart';
+import '../../giving/presentation/giving_screen.dart';
 import '../../magazine/presentation/magazines_screen.dart';
+import '../../prayer/presentation/prayer_screen.dart';
 import '../../sermons/presentation/sermons_screen.dart';
 import 'home_screen.dart';
 
@@ -43,7 +44,10 @@ class _MainScaffoldState extends State<MainScaffold> {
       MagazinesScreen(
         drawer: drawer,
       ),
-      PrayerAndGiveScreen(
+      GivingScreen(
+        drawer: drawer,
+      ),
+      PrayerScreen(
         drawer: drawer,
       ),
     ];

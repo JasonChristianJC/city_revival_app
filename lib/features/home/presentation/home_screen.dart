@@ -118,7 +118,7 @@ class HomeScreen extends ConsumerWidget {
                       icon: Icons.lock_person_rounded,
                       label: 'Prayer',
                       color: const Color(0xFF7C3AED),
-                      onTap: () => onNavigateTab(4),
+                      onTap: () => onNavigateTab(5),
                     ),
                   ],
                 ),
