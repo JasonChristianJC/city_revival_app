@@ -256,7 +256,7 @@ class _UpiGivingCardState extends State<UpiGivingCard> {
 
   Widget _buildUpiAppButton({
     required String title,
-    required IconData icon,
+    required Object icon,
     required Color iconColor,
     required Color bgColor,
     required Color borderColor,
@@ -277,7 +277,10 @@ class _UpiGivingCardState extends State<UpiGivingCard> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              FaIcon(icon, size: 22, color: iconColor),
+              if (icon is FaIconData)
+                FaIcon(icon, size: 22, color: iconColor)
+              else if (icon is IconData)
+                Icon(icon, size: 22, color: iconColor),
               const SizedBox(height: 6),
               Text(
                 title,

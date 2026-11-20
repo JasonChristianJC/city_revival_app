@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_theme.dart';
@@ -20,37 +20,25 @@ class SermonPlayerScreen extends StatefulWidget {
 class _SermonPlayerScreenState extends State<SermonPlayerScreen> {
   late YoutubePlayerController _ytController;
   bool _isAudioOnly = false;
-  bool _isPlayerReady = false;
 
   @override
   void initState() {
     super.initState();
-    _ytController = YoutubePlayerController(
-      initialVideoId: widget.sermon.youtubeId,
-      flags: const YoutubePlayerFlags(
-        autoPlay: true,
+    _ytController = YoutubePlayerController.fromVideoId(
+      videoId: widget.sermon.youtubeId,
+      autoPlay: true,
+      params: const YoutubePlayerParams(
         mute: false,
+        showControls: true,
+        showFullscreenButton: true,
         enableCaption: true,
-        forceHD: false,
       ),
-    )..addListener(_listener);
-  }
-
-  void _listener() {
-    if (_isPlayerReady && mounted && !_ytController.value.isFullScreen) {
-      setState(() {});
-    }
-  }
-
-  @override
-  void deactivate() {
-    _ytController.pause();
-    super.deactivate();
+    );
   }
 
   @override
   void dispose() {
-    _ytController.dispose();
+    _ytController.close();
     super.dispose();
   }
 
@@ -58,21 +46,8 @@ class _SermonPlayerScreenState extends State<SermonPlayerScreen> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return YoutubePlayerBuilder(
-      player: YoutubePlayer(
-        controller: _ytController,
-        showVideoProgressIndicator: true,
-        progressIndicatorColor: AppColors.divineGold,
-        progressColors: const ProgressBarColors(
-          playedColor: AppColors.primaryWine,
-          handleColor: AppColors.divineGold,
-        ),
-        onReady: () {
-          setState(() {
-            _isPlayerReady = true;
-          });
-        },
-      ),
+    return YoutubePlayerScaffold(
+      controller: _ytController,
       builder: (context, player) {
         return Scaffold(
           appBar: AppBar(
@@ -84,10 +59,8 @@ class _SermonPlayerScreenState extends State<SermonPlayerScreen> {
                 onPressed: () {
                   final text = '''
 ✝️ *${widget.sermon.titleEn}*
-${widget.sermon.titleTa.isNotEmpty ? "${widget.sermon.titleTa}\n" : ""}
-Speaker: ${widget.sermon.speaker}
-${widget.sermon.scripture.isNotEmpty ? "Scripture: ${widget.sermon.scripture}\n" : ""}
-Watch here: ${widget.sermon.youtubeUrl}
+${widget.sermon.titleTa.isNotEmpty ? "${widget.sermon.titleTa}\n" : ""}Speaker: ${widget.sermon.speaker}
+${widget.sermon.scripture.isNotEmpty ? "Scripture: ${widget.sermon.scripture}\n" : ""}Watch here: ${widget.sermon.youtubeUrl}
 
 *${AppConstants.churchName}*
 ''';
@@ -137,20 +110,25 @@ Watch here: ${widget.sermon.youtubeUrl}
                           ),
                         ),
                         const SizedBox(height: 16),
-                        IconButton(
-                          iconSize: 42,
-                          color: AppColors.divineGold,
-                          icon: Icon(
-                            _ytController.value.isPlaying
-                                ? Icons.pause_circle_filled
-                                : Icons.play_circle_filled,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _ytController.value.isPlaying
-                                  ? _ytController.pause()
-                                  : _ytController.play();
-                            });
+                        YoutubeValueBuilder(
+                          controller: _ytController,
+                          builder: (context, value) {
+                            return IconButton(
+                              iconSize: 42,
+                              color: AppColors.divineGold,
+                              icon: Icon(
+                                value.playerState == PlayerState.playing
+                                    ? Icons.pause_circle_filled
+                                    : Icons.play_circle_filled,
+                              ),
+                              onPressed: () {
+                                if (value.playerState == PlayerState.playing) {
+                                  _ytController.pauseVideo();
+                                } else {
+                                  _ytController.playVideo();
+                                }
+                              },
+                            );
                           },
                         ),
                       ],

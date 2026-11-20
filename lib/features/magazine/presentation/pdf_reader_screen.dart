@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -28,7 +29,13 @@ class _PdfReaderScreenState extends ConsumerState<PdfReaderScreen> {
   @override
   void initState() {
     super.initState();
-    _preparePdf();
+    if (kIsWeb) {
+      // On web, open the PDF URL directly in the browser
+      _openExternal();
+      setState(() => _isLoading = false);
+    } else {
+      _preparePdf();
+    }
   }
 
   Future<void> _preparePdf() async {
@@ -90,6 +97,68 @@ class _PdfReaderScreenState extends ConsumerState<PdfReaderScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // On web, show a simple "open in browser" card since local PDFs can't be rendered
+    if (kIsWeb) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(widget.magazine.issuePeriod),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.share),
+              tooltip: 'Share Magazine',
+              onPressed: () {
+                ShareHelper.shareGeneral(
+                  message:
+                      'Paripoorana Jeevan Magazine (${widget.magazine.issuePeriod} ${widget.magazine.year})\nRead here: ${widget.magazine.pdfUrl}',
+                  subject: widget.magazine.title,
+                );
+              },
+            ),
+          ],
+        ),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(32),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.picture_as_pdf, size: 72, color: AppColors.primaryWine),
+                const SizedBox(height: 20),
+                Text(
+                  widget.magazine.title,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  '${widget.magazine.issuePeriod} ${widget.magazine.year}',
+                  style: const TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                const SizedBox(height: 28),
+                ElevatedButton.icon(
+                  onPressed: _openExternal,
+                  icon: const Icon(Icons.open_in_browser),
+                  label: const Text('Open PDF in Browser'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primaryWine,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                    textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                const Text(
+                  'PDF reading is fully supported on the mobile app.',
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.magazine.issuePeriod),
