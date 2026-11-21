@@ -283,10 +283,15 @@ export const PrayerRequestManager: React.FC = () => {
               </button>
               <button
                 onClick={() => handleDelete(req.id)}
+                disabled={deletingId === req.id}
                 title="Permanently delete prayer request"
-                className="p-2 text-stone-400 hover:text-red-600 border border-[#E5DEC9] rounded-xl hover:bg-red-50 transition-colors"
+                className="p-2 text-stone-400 hover:text-red-600 border border-[#E5DEC9] rounded-xl hover:bg-red-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <Trash2 size={16} />
+                {deletingId === req.id ? (
+                  <svg className="animate-spin" width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><circle cx="12" cy="12" r="10" strokeOpacity={0.3}/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+                ) : (
+                  <Trash2 size={16} />
+                )}
               </button>
             </div>
           </div>

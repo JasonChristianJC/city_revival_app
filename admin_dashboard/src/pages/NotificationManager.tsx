@@ -333,10 +333,15 @@ export const NotificationManager: React.FC = () => {
                 </button>
                 <button
                   onClick={() => handleDelete(n.id)}
+                  disabled={deletingId === n.id}
                   title="Permanently delete notification record"
-                  className="p-1.5 text-stone-400 hover:text-red-600 rounded-lg hover:bg-red-50 border border-[#E5DEC9] transition-colors"
+                  className="p-1.5 text-stone-400 hover:text-red-600 rounded-lg hover:bg-red-50 border border-[#E5DEC9] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <Trash2 size={14} />
+                  {deletingId === n.id ? (
+                    <svg className="animate-spin" width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><circle cx="12" cy="12" r="10" strokeOpacity={0.3}/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+                  ) : (
+                    <Trash2 size={14} />
+                  )}
                 </button>
               </div>
             </div>

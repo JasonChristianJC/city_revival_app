@@ -398,10 +398,15 @@ export const DailyVerseManager: React.FC = () => {
                       </button>
                       <button
                         onClick={() => handleDelete(v.id)}
+                        disabled={deletingId === v.id}
                         title="Permanently delete verse"
-                        className="p-1.5 text-stone-400 hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors"
+                        className="p-1.5 text-stone-400 hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        <Trash2 size={15} />
+                        {deletingId === v.id ? (
+                          <svg className="animate-spin" width={15} height={15} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><circle cx="12" cy="12" r="10" strokeOpacity={0.3}/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+                        ) : (
+                          <Trash2 size={15} />
+                        )}
                       </button>
                     </div>
                   </td>
