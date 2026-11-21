@@ -158,28 +158,25 @@ export const AnnouncementManager: React.FC = () => {
       return;
     }
 
+    setDeletingId(annId);
     try {
-      // 1. Permanently remove flyer from Supabase Storage bucket
       if (targetAnn?.flyer_url) {
         await deleteStorageFile('announcement-flyers', targetAnn.flyer_url);
       }
-
-      // 2. Permanently delete database record
       const { error } = await supabase.from('announcements').delete().eq('id', annId);
       if (error) throw error;
-
       await logAdminAction(user?.email || 'admin', 'DELETE_ANNOUNCEMENT', 'announcements', annId, {
         title: targetAnn?.title,
         flyer_url: targetAnn?.flyer_url,
       });
-
       setMessage({ type: 'success', text: 'Announcement permanently deleted from Supabase!' });
       if (id === annId) handleResetForm();
-      // Re-sync from DB — this is the source of truth
       await loadAnnouncements();
     } catch (err: any) {
       console.error('Delete announcement error:', err);
       setMessage({ type: 'error', text: `Delete failed: ${err.message || 'Unknown error'}` });
+    } finally {
+      setDeletingId(null);
     }
   };
 

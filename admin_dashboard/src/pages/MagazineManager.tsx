@@ -169,34 +169,26 @@ export const MagazineManager: React.FC = () => {
       return;
     }
 
+    setDeletingId(magId);
     try {
-      // 1. Permanently delete PDF from storage bucket
-      if (targetMag?.pdf_url) {
-        await deleteStorageFile('magazine-pdfs', targetMag.pdf_url);
-      }
-      // 2. Permanently delete Cover Image from storage bucket
-      if (targetMag?.cover_image_url) {
-        await deleteStorageFile('magazine-covers', targetMag.cover_image_url);
-      }
-
-      // 3. Delete database record
+      if (targetMag?.pdf_url) await deleteStorageFile('magazine-pdfs', targetMag.pdf_url);
+      if (targetMag?.cover_image_url) await deleteStorageFile('magazine-covers', targetMag.cover_image_url);
       const { error } = await supabase.from('magazines').delete().eq('id', magId);
       if (error) throw error;
-
       await logAdminAction(user?.email || 'admin', 'DELETE_MAGAZINE', 'magazines', magId, {
         title: targetMag?.title,
         pdf_url: targetMag?.pdf_url,
         cover_image_url: targetMag?.cover_image_url,
       });
-
       setMessage({ type: 'success', text: 'Magazine issue and associated storage files permanently deleted!' });
+      if (id === magId) handleResetForm();
+      await loadMagazines();
     } catch (err: any) {
-      console.warn('Delete magazine fallback', err);
-      setMessage({ type: 'success', text: 'Magazine issue removed from view.' });
+      console.error('Delete magazine error:', err);
+      setMessage({ type: 'error', text: `Delete failed: ${err.message || 'Unknown error'}` });
+    } finally {
+      setDeletingId(null);
     }
-
-    setMagazines((prev) => prev.filter((m) => m.id !== magId));
-    if (id === magId) handleResetForm();
   };
 
   const handleEdit = (m: Magazine) => {

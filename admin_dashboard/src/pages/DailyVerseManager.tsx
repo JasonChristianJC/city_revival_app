@@ -112,6 +112,7 @@ export const DailyVerseManager: React.FC = () => {
       return;
     }
 
+    setDeletingId(verseId);
     try {
       const { error } = await supabase.from('daily_verses').delete().eq('id', verseId);
       if (error) throw error;
@@ -120,13 +121,14 @@ export const DailyVerseManager: React.FC = () => {
         verse_date: targetVerse?.verse_date,
       });
       setMessage({ type: 'success', text: 'Promise verse permanently deleted!' });
+      if (id === verseId) handleResetForm();
+      await loadVerses();
     } catch (err: any) {
-      console.warn('Delete verse fallback', err);
-      setMessage({ type: 'success', text: 'Promise verse removed from list.' });
+      console.error('Delete verse error:', err);
+      setMessage({ type: 'error', text: `Delete failed: ${err.message || 'Unknown error'}` });
+    } finally {
+      setDeletingId(null);
     }
-
-    setVerses((prev) => prev.filter((v) => v.id !== verseId));
-    if (id === verseId) handleResetForm();
   };
 
   const handleSelectVerse = (v: DailyVerse) => {

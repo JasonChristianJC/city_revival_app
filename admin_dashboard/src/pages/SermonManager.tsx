@@ -181,29 +181,26 @@ export const SermonManager: React.FC = () => {
       return;
     }
 
+    setDeletingId(sermonId);
     try {
-      // 1. Purge custom thumbnail from storage bucket if stored in Supabase
       if (targetSermon?.thumbnail_url && targetSermon.thumbnail_url.includes('sermon-thumbnails')) {
         await deleteStorageFile('sermon-thumbnails', targetSermon.thumbnail_url);
       }
-
-      // 2. Delete database record
       const { error } = await supabase.from('sermons').delete().eq('id', sermonId);
       if (error) throw error;
-
       await logAdminAction(user?.email || 'admin', 'DELETE_SERMON', 'sermons', sermonId, {
         title_en: targetSermon?.title_en,
         thumbnail_url: targetSermon?.thumbnail_url,
       });
-
       setMessage({ type: 'success', text: 'Sermon and custom storage files permanently deleted!' });
+      if (id === sermonId) handleResetForm();
+      await loadSermons();
     } catch (err: any) {
-      console.warn('Delete sermon fallback', err);
-      setMessage({ type: 'success', text: 'Sermon removed from library view.' });
+      console.error('Delete sermon error:', err);
+      setMessage({ type: 'error', text: `Delete failed: ${err.message || 'Unknown error'}` });
+    } finally {
+      setDeletingId(null);
     }
-
-    setSermons((prev) => prev.filter((s) => s.id !== sermonId));
-    if (id === sermonId) handleResetForm();
   };
 
   const handleEdit = (s: Sermon) => {

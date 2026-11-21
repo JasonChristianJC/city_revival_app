@@ -116,21 +116,22 @@ export const NotificationManager: React.FC = () => {
       return;
     }
 
+    setDeletingId(notifId);
     try {
       const { error } = await supabase.from('app_notifications').delete().eq('id', notifId);
       if (error) throw error;
-
       await logAdminAction(user?.email || 'admin', 'DELETE_NOTIFICATION', 'app_notifications', notifId, {
         title: target?.title,
       });
-
       setMessage({ type: 'success', text: 'Notification permanently removed.' });
-    } catch (_) {
-      setMessage({ type: 'success', text: 'Notification removed from view.' });
+      if (editingId === notifId) handleReset();
+      await loadNotifications();
+    } catch (err: any) {
+      console.error('Delete notification error:', err);
+      setMessage({ type: 'error', text: `Delete failed: ${err.message || 'Unknown error'}` });
+    } finally {
+      setDeletingId(null);
     }
-
-    setNotifications((prev) => prev.filter((n) => n.id !== notifId));
-    if (editingId === notifId) handleReset();
   };
 
   const handleReset = () => {

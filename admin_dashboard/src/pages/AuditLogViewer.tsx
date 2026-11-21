@@ -36,11 +36,16 @@ export const AuditLogViewer: React.FC = () => {
   const handleDeleteLog = async (logId: string) => {
     if (!confirm('Are you sure you want to permanently delete this audit log entry?')) return;
 
+    setDeletingId(logId);
     try {
-      await supabase.from('admin_audit_logs').delete().eq('id', logId);
-    } catch (_) {}
-
-    setLogs((prev) => prev.filter((l) => l.id !== logId));
+      const { error } = await supabase.from('admin_audit_logs').delete().eq('id', logId);
+      if (error) throw error;
+      await loadLogs();
+    } catch (err: any) {
+      console.error('Delete log error:', err);
+    } finally {
+      setDeletingId(null);
+    }
   };
 
   if (!isSuperAdmin) {

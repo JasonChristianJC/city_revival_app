@@ -116,22 +116,23 @@ export const PrayerRequestManager: React.FC = () => {
       return;
     }
 
+    setDeletingId(reqId);
     try {
       const { error } = await supabase.from('prayer_requests').delete().eq('id', reqId);
       if (error) throw error;
-
       await logAdminAction(user?.email || 'admin', 'DELETE_PRAYER_REQUEST', 'prayer_requests', reqId, {
         name: target?.name,
         category: target?.category,
       });
-
       setMessage({ type: 'success', text: 'Prayer request permanently deleted from database.' });
-    } catch (_) {
-      setMessage({ type: 'success', text: 'Prayer request removed from view.' });
+      if (selectedReq?.id === reqId) setSelectedReq(null);
+      await loadPrayerRequests();
+    } catch (err: any) {
+      console.error('Delete prayer request error:', err);
+      setMessage({ type: 'error', text: `Delete failed: ${err.message || 'Unknown error'}` });
+    } finally {
+      setDeletingId(null);
     }
-
-    setRequests((prev) => prev.filter((r) => r.id !== reqId));
-    if (selectedReq?.id === reqId) setSelectedReq(null);
   };
 
   if (!canManagePrayer) {
