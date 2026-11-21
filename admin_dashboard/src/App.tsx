@@ -23,9 +23,11 @@ const DashboardContent: React.FC = () => {
     return (
       <div className="min-h-screen bg-[#FAF7F0] flex items-center justify-center">
         <div className="flex flex-col items-center space-y-3">
-          <div className="w-12 h-12 rounded-xl bg-[#8F2638] text-white flex items-center justify-center font-serif text-xl font-bold animate-pulse">
-            CR
-          </div>
+          <img
+            src="/church_logo.png"
+            alt="City Revival AG Church"
+            className="w-14 h-14 rounded-full object-contain bg-white border border-[#E5DEC9] shadow-sm animate-pulse"
+          />
           <p className="text-xs font-semibold text-[#8F2638] tracking-widest uppercase">
             Loading Control Panel...
           </p>

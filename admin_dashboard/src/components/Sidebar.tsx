@@ -105,9 +105,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab }) => 
       {/* Brand Header */}
       <div className="p-5 border-b border-[#E5DEC9] bg-[#FAF7F0]">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-lg bg-[#8F2638] flex items-center justify-center text-white shadow-sm font-serif font-bold text-lg">
-            CR
-          </div>
+          <img
+            src="/church_logo.png"
+            alt="City Revival AG Church"
+            className="w-10 h-10 rounded-full object-contain bg-white border border-[#E5DEC9] shadow-xs"
+          />
           <div>
             <h1 className="text-sm font-bold text-[#8F2638] tracking-tight leading-tight uppercase">
               City Revival AG

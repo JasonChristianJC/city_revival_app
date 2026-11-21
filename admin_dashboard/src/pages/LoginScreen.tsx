@@ -25,9 +25,11 @@ export const LoginScreen: React.FC = () => {
       <div className="max-w-md w-full relative z-10">
         {/* Church Seal & Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#8F2638] text-white shadow-md mb-4 font-serif text-2xl font-bold tracking-tight">
-            CR
-          </div>
+          <img
+            src="/church_logo.png"
+            alt="City Revival AG Church"
+            className="w-20 h-20 rounded-full mx-auto object-contain bg-white border-2 border-[#E5DEC9] shadow-md mb-4"
+          />
           <h1 className="text-2xl font-serif font-bold text-[#8F2638] tracking-tight">
             City Revival AG Church
           </h1>
